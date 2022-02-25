@@ -4,10 +4,14 @@ import {authAPI, LoginParamsType, todolistsAPI} from "../../api/todolists-api";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/error-utils";
 
 
-const initialState: InitialStateType = {}
+const initialState: InitialStateType = {
+    isLoggedIn: false
+}
 
-export const loginReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
+export const authReducer = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
+        case 'login/SET-IS-LOGGED-IN':
+            return {...state, isLoggedIn: action.value}
         default:
             return state
     }
@@ -15,16 +19,17 @@ export const loginReducer = (state: InitialStateType = initialState, action: Act
 
 
 // actions
-// export const removeTaskAC = (taskId: string, todolistId: string) => ({type: 'REMOVE-TASK', taskId, todolistId} as const)
+export const setIsLoggedInAC = (value: boolean) => ({type: 'login/SET-IS-LOGGED-IN', value} as const)
 
 
 // thunks
-export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsType | SetAppStatusActionType>) => {
+export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>) => {
     dispatch(setAppStatusAC('loading'))
     authAPI.login(data)
         .then(res => {
             // @ts-ignore
             if (res.data.resultCode === 0) {
+                dispatch(setIsLoggedInAC(true))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
                 // @ts-ignore
@@ -38,7 +43,9 @@ export const loginTC = (data: LoginParamsType) => (dispatch: Dispatch<ActionsTyp
 
 
 // types
-type ActionsType = any
-type InitialStateType = {}
+type ActionsType = ReturnType<typeof setIsLoggedInAC>
+type InitialStateType = {
+    isLoggedIn: boolean
+}
 
 type ThunkDispatch = Dispatch<ActionsType | SetAppStatusActionType | SetAppErrorActionType>
