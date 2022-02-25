@@ -46,6 +46,9 @@ export const authAPI = {
     login(data: LoginParamsType) {
         // @ts-ignore
         return instance.post<ResponseType<{userId?: number}>>('auth/login', data);
+    },
+    me(){
+       return instance.post<ResponseType<{id: number, email: string, login: string}>>('auth/login');
     }
 }
 
