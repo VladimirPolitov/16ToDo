@@ -15,7 +15,6 @@ import {Menu} from '@mui/icons-material';
 import {ErrorSnackbar} from '../components/ErrorSnackbar/ErrorSnackbar'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Login} from '../features/Login/Login'
-import {CircularProgress} from "@mui/material";
 
 
 type PropsType = {
@@ -24,20 +23,6 @@ type PropsType = {
 
 function App({demo = false}: PropsType) {
     const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status)
-    const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized)
-    const dispatch = useDispatch()
-
-    useEffect(()=>{
-        dispatch(initialaizeAppTC())
-    }, [])
-
-    if (!isInitialized) {
-        return <div
-            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
-            <CircularProgress/>
-        </div>
-    }
-
 
     return (
         <BrowserRouter>
